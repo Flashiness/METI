@@ -365,10 +365,84 @@ enhanced_exp_adata.write_h5ad("../tutorial/data/enhanced_exp.h5ad")
     Imputing spot 91000
     Imputing spot 92000
 
-#### 5.5
+### 6. Goblet marker gene expression
+```python
+#================ determine if markers are in ===============#
+enhanced_exp_adata=sc.read("..tutorial/data/enhanced_exp.h5ad")
+markers = ["MS4A10", "MGAM", "CYP4F2", "XPNPEP2", "SLC5A9", "SLC13A2", "SLC28A1", "MEP1A", "ABCG2", "ACE2"]
+for i in range(len(markers)):
+    if markers[i] in enhanced_exp_adata.var.index: print("yes")
+    else: print(markers[i])
+```
 
+```python
+save_dir="..tutorial/data/Goblet/"
+if not os.path.exists(save_dir):os.mkdir(save_dir)
+```
 
+```python
+#================ Plot gene expression image ===============#
+markers = ["MS4A10", "MGAM", "CYP4F2", "XPNPEP2", "SLC5A9", "SLC13A2", "SLC28A1", "MEP1A", "ABCG2", "ACE2"]
+for i in range(len(markers)):
+    cnt_color = clr.LinearSegmentedColormap.from_list('magma', ["#000003",  "#3b0f6f",  "#8c2980",   "#f66e5b", "#fd9f6c", "#fbfcbf"], N=256)
+    g=markers[i]
+    enhanced_exp_adata.obs[g]=enhanced_exp_adata.X[:,enhanced_exp_adata.var.index==g]
+    fig=sc.pl.scatter(enhanced_exp_adata,alpha=1,x="y",y="x",color=g,color_map=cnt_color,show=False,size=10)
+    fig.set_aspect('equal', 'box')
+    fig.invert_yaxis()
+    plt.gcf().set_dpi(600)
+    fig.figure.show()
 
+    plt.savefig(save_dir + str(markers[i]) + ".png", dpi=600)
+    plt.close()
+```
+
+```python
+#================ Plot meta gene expression image ===============#
+enhanced_exp_adata=sc.read("/Users/jjiang6/Desktop/UTH/MDA GRA/Spatial transcriptome/Cell Segmentation/With Jian Hu/S1_54078/TESLA/enhanced_exp.h5ad")
+genes =   ["MS4A10", "MGAM", "CYP4F2", "XPNPEP2", "SLC5A9", "SLC13A2", "SLC28A1", "MEP1A", "ABCG2", "ACE2"]
+    
+sudo_adata = meti.meta_gene_plot(img=img, 
+                                binary=binary,
+                                sudo_adata=enhanced_exp_adata, 
+                                genes=genes, 
+                                resize_factor=resize_factor,
+                                target_size="small")
+
+cnt_color = clr.LinearSegmentedColormap.from_list('magma', ["#000003",  "#3b0f6f",  "#8c2980",   "#f66e5b", "#fd9f6c", "#fbfcbf"], N=256)
+fig=sc.pl.scatter(sudo_adata,alpha=1,x="y",y="x",color='meta',color_map=cnt_color,show=False,size=5)
+fig.set_aspect('equal', 'box')
+fig.invert_yaxis()
+plt.gcf().set_dpi(600)
+fig.figure.show()
+
+plt.savefig(save_dir + "Goblet_meta.png", dpi=600)
+plt.close()
+```
+
+### 7. Region annotation
+```python
+genes=["MS4A10", "MGAM", "CYP4F2", "XPNPEP2", "SLC5A9", "SLC13A2", "SLC28A1", "MEP1A", "ABCG2", "ACE2"]
+genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
+#target_size can be set to "small" or "large".
+pred_refined, target_clusters, c_m=meti.annotation(img=img, 
+                                                    binary=binary,
+                                                    sudo_adata=enhanced_exp_adata, 
+                                                    genes=genes, 
+                                                    resize_factor=resize_factor,
+                                                    num_required=1, 
+                                                    target_size="small")
+#Plot
+ret_img=tesla.visualize_annotation(img=img, 
+                              binary=binary, 
+                              resize_factor=resize_factor,
+                              pred_refined=pred_refined, 
+                              target_clusters=target_clusters, 
+                              c_m=c_m)
+
+cv2.imwrite(save_dir + 'IME.jpg', ret_img)
+Image(filename=save_dir + 'IME.jpg')
+```
 
 
 
