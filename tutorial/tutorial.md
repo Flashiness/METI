@@ -105,7 +105,6 @@ The current version of METI requres three input data.
 2. Spatial coordinateds of samplespositions.txt;
 3. Histology image(optional): histology.tif, can be tif or png or jepg.
 
-"""
 ```python
 #================== 3. Read in data ==================#
 #Read original 10x_h5 data and save it to h5ad
@@ -138,11 +137,44 @@ img = np.array(img)
 img=img[...,:3]
 ```
 
+### 5. Gene expression enhancement
+#### 5.1 Preprocessing
+```python
+resize_factor=1000/np.min(img.shape[0:2])
+resize_width=int(img.shape[1]*resize_factor)
+resize_height=int(img.shape[0]*resize_factor)
+counts.var.index=[i.upper() for i in counts.var.index]
+counts.var_names_make_unique()
+counts.raw=counts
+sc.pp.log1p(counts) # impute on log scale
+if issparse(counts.X):counts.X=counts.X.A
+```
+#### 5.2 Contour detection
+```python
+# Detect contour using cv2
+cnt=tesla.cv2_detect_contour(img, apertureSize=5,L2gradient = True)
 
+binary=np.zeros((img.shape[0:2]), dtype=np.uint8)
+cv2.drawContours(binary, [cnt], -1, (1), thickness=-1)
+#Enlarged filter
+cnt_enlarged = tesla.scale_contour(cnt, 1.05)
+binary_enlarged = np.zeros(img.shape[0:2])
+cv2.drawContours(binary_enlarged, [cnt_enlarged], -1, (1), thickness=-1)
+img_new = img.copy()
+cv2.drawContours(img_new, [cnt], -1, (255), thickness=20)
+img_new=cv2.resize(img_new, ((resize_width, resize_height)))
+cv2.imwrite('../tutorial/data/cnt_1957495.jpg', img_new)
+Image(filename='../tutorial/data/cnt_1957495.jpg')
+```
 
-
-
-
+#### 5.3 Gene expression enhancement
+```python
+#Set size of superpixel
+res=40
+# Note, if the numer of superpixels is too large and take too long, you can increase the res to 100
+enhanced_exp_adata=tesla.imputation(img=img, raw=counts, cnt=cnt, genes=counts.var.index.tolist(), shape="None", res=res, s=1, k=2, num_nbs=10)
+enhanced_exp_adata.write_h5ad("../tutorial/data/enhanced_exp.h5ad")
+```
 
 
 
