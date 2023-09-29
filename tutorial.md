@@ -1,3 +1,4 @@
+
 <h1><center>METI Tutorial</center></h1>
 
 ## Outline
@@ -77,6 +78,23 @@ adata
     uns: 'spatial'
     obsm: 'spatial'
 
+```python
+adata.var_names_make_unique()
+adata.var["mt"] = adata.var_names.str.startswith("MT-")
+sc.pp.calculate_qc_metrics(adata, qc_vars=["mt"], inplace=True)
+
+adata
+```
+    AnnData object with n_obs × n_vars = 3875 × 17943
+    obs: 'in_tissue', 'array_row', 'array_col', 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', 'pct_counts_in_top_50_genes', 'pct_counts_in_top_100_genes', 'pct_counts_in_top_200_genes', 'pct_counts_in_top_500_genes', 'total_counts_mt', 'log1p_total_counts_mt', 'pct_counts_mt'
+    var: 'gene_ids', 'feature_types', 'genome', 'mt', 'n_cells_by_counts', 'mean_counts', 'log1p_mean_counts', 'pct_dropout_by_counts', 'total_counts', 'log1p_total_counts'
+    uns: 'spatial'
+    obsm: 'spatial'
+
+```python
+plt.rcParams["figure.figsize"] = (8, 8)
+sc.pl.spatial(adata, img_key="hires", color=["total_counts", "n_genes_by_counts"], size = 1.5, save = 'QC_plot.pdf')
+```
 
 
 
