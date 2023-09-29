@@ -93,7 +93,7 @@ adata
 
 ```python
 plt.rcParams["figure.figsize"] = (8, 8)
-sc.pl.spatial(adata, img_key="hires", color=["total_counts", "n_genes_by_counts"], size = 1.5, save = 'QC_plot.png')
+sc.pl.spatial(adata, img_key="hires", color=["total_counts", "n_genes_by_counts"], size = 1.5, save = 'UMI_count.png')
 ```
 
 **UMI counts**![](./sample_results/showUMI_count.png)
@@ -105,12 +105,13 @@ The current version of METI requres three input data.
 2. Spatial coordinateds of samplespositions.txt;
 3. Histology image(optional): histology.tif, can be tif or png or jepg.
 
+"""
 ```python
 #================== 3. Read in data ==================#
 #Read original 10x_h5 data and save it to h5ad
 from scanpy import read_10x_h5
-adata = read_10x_h5("/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/Spaceranger/filtered_feature_bc_matrix.h5")
-spatial=pd.read_csv("/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/Spaceranger/tissue_positions_list.csv",sep=",",header=None,na_filter=False,index_col=0) 
+adata = read_10x_h5("../tutorial/data/filtered_feature_bc_matrix.h5")
+spatial=pd.read_csv("../tutorial/data/tissue_positions_list.csv",sep=",",header=None,na_filter=False,index_col=0) 
 adata.obs["x1"]=spatial[1]
 adata.obs["x2"]=spatial[2]
 adata.obs["x3"]=spatial[3]
@@ -124,15 +125,17 @@ adata.obs["pixel_y"]=adata.obs["x5"]
 adata=adata[adata.obs["x1"]==1]
 adata.var_names=[i.upper() for i in list(adata.var_names)]
 adata.var["genename"]=adata.var.index.astype("str")
-adata.write_h5ad("/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/TESLA/1957495_data.h5ad")
+adata.write_h5ad("../tutorial/data/1957495_data.h5ad")
 
 #Read in gene expression and spatial location
-counts=sc.read("/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/TESLA/1957495_data.h5ad")
+counts=sc.read("../tutorial/data/1957495_data.h5ad")
 #Read in hitology image
-PIL.Image.MAX_IMAGE_PIXELS = 1132571940
-img = IMAGE.open(r"/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/B1_turn.tif") 
+PIL.Image.MAX_IMAGE_PIXELS = None
+img = IMAGE.open(r"../tutorial/data/histology.tif") 
 img = np.array(img)
 
+#if your image has 4 dimensions, only keep first 3 dims
+img=img[...,:3]
 ```
 
 
