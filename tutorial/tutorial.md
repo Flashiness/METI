@@ -105,7 +105,35 @@ The current version of METI requres three input data.
 2. Spatial coordinateds of samplespositions.txt;
 3. Histology image(optional): histology.tif, can be tif or png or jepg.
 
-The gene expreesion data can be stored as an AnnData object. AnnData stores a data matrix .X together with annotations of observations .obs, variables .var and unstructured annotations .uns. 
+```python
+#================== 3. Read in data ==================#
+#Read original 10x_h5 data and save it to h5ad
+from scanpy import read_10x_h5
+adata = read_10x_h5("/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/Spaceranger/filtered_feature_bc_matrix.h5")
+spatial=pd.read_csv("/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/Spaceranger/tissue_positions_list.csv",sep=",",header=None,na_filter=False,index_col=0) 
+adata.obs["x1"]=spatial[1]
+adata.obs["x2"]=spatial[2]
+adata.obs["x3"]=spatial[3]
+adata.obs["x4"]=spatial[4]
+adata.obs["x5"]=spatial[5] 
+adata.obs["array_x"]=adata.obs["x2"]
+adata.obs["array_y"]=adata.obs["x3"]
+adata.obs["pixel_x"]=adata.obs["x4"]
+adata.obs["pixel_y"]=adata.obs["x5"]
+#Select captured samples
+adata=adata[adata.obs["x1"]==1]
+adata.var_names=[i.upper() for i in list(adata.var_names)]
+adata.var["genename"]=adata.var.index.astype("str")
+adata.write_h5ad("/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/TESLA/1957495_data.h5ad")
+
+#Read in gene expression and spatial location
+counts=sc.read("/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/TESLA/1957495_data.h5ad")
+#Read in hitology image
+PIL.Image.MAX_IMAGE_PIXELS = 1132571940
+img = IMAGE.open(r"/Users/jjiang6/Desktop/UTH/MDA_GRA/Project1/S3_1957495/B1_turn.tif") 
+img = np.array(img)
+
+```
 
 
 
