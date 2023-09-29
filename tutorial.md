@@ -29,6 +29,52 @@ cd METI/METI_package/
 python3 setup.py install --user
 ```
 
+### 2. Import modules
+
+```python
+import torch
+import csv,re, time
+import pickle
+import random
+import warnings
+warnings.filterwarnings('ignore')
+import pandas as pd
+import numpy as np
+from scipy import stats
+from scipy.sparse import issparse
+import scanpy as sc
+import matplotlib.colors as clr
+import matplotlib.pyplot as plt
+import cv2
+import TESLA as tesla
+from IPython.display import Image
+import scipy.sparse
+import scanpy as sc
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scanpy import read_10x_h5
+import PIL
+from PIL import Image as IMAGE
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
