@@ -396,6 +396,7 @@ for i in range(len(markers)):
     plt.savefig(save_dir + str(markers[i]) + ".png", dpi=600)
     plt.close()
 ```
+**Gene expression**![](./sample_results/ABCG2.png)
 
 ```python
 #================ Plot meta gene expression image ===============#
@@ -419,6 +420,7 @@ fig.figure.show()
 plt.savefig(save_dir + "Goblet_meta.png", dpi=600)
 plt.close()
 ```
+**Meta gene expression**![](./sample_results/Goblet_meta.png)
 
 ### 7. Region annotation
 ```python
@@ -443,7 +445,7 @@ ret_img=tesla.visualize_annotation(img=img,
 cv2.imwrite(save_dir + 'IME.jpg', ret_img)
 Image(filename=save_dir + 'IME.jpg')
 ```
-
+**Goblet region annotation**![](./sample_results/Goblet.jpg)
 
 
 
