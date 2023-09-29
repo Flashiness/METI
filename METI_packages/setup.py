@@ -18,7 +18,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Flashiness/METI",
-    packages=find_packages(),
+    packages=setuptools.find_packages(),
     install_requires=["python-igraph","torch","pandas","numpy","scipy","scanpy","anndata","louvain","scikit-learn", "numba", "TESLAforST"],
 )
 
