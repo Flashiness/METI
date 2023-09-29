@@ -93,10 +93,10 @@ adata
 
 ```python
 plt.rcParams["figure.figsize"] = (8, 8)
-sc.pl.spatial(adata, img_key="hires", color=["total_counts", "n_genes_by_counts"], size = 1.5, save = 'QC_plot.pdf')
+sc.pl.spatial(adata, img_key="hires", color=["total_counts", "n_genes_by_counts"], size = 1.5, save = 'QC_plot.png')
 ```
 
-[UMI counts](./sample_results/UMI_count.pdf)
+**UMI counts**![](./sample_results/showUMI_count.png)
 
 
 ### 4. Read in data
