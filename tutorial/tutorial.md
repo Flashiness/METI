@@ -96,7 +96,7 @@ plt.rcParams["figure.figsize"] = (8, 8)
 sc.pl.spatial(adata, img_key="hires", color=["total_counts", "n_genes_by_counts"], size = 1.5, save = 'QC_plot.pdf')
 ```
 
-**UMI counts**![](./sample_results/UMI_count.pdf) 
+**UMI counts**[embed](./sample_results/UMI_count.pdf)[/embed]
 
 
 ### 4. Read in data
