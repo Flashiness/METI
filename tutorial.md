@@ -3,7 +3,8 @@
 ## Outline
 1. [Installation]
 2. [Import modules]
-3. [Read in data]
+3. [Quality control]
+4. [Read in data]
 
 ### 1. Installation
 The installation should take a few minutes on a normal computer. 
@@ -59,6 +60,34 @@ from PIL import Image as IMAGE
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 ```
+
+```python
+METI.__version__
+```
+### 3. Quality control
+```python
+adata=sc.read_visium("/tutorial/data/Spaceranger/")
+spatial=pd.read_csv("/tutorial/data/Spaceranger/tissue_positions_list.csv",sep=",",header=None,na_filter=False,index_col=0)
+
+adata
+```
+    AnnData object with n_obs × n_vars = 3875 × 17943
+    obs: 'in_tissue', 'array_row', 'array_col'
+    var: 'gene_ids', 'feature_types', 'genome'
+    uns: 'spatial'
+    obsm: 'spatial'
+
+
+
+
+### 4. Read in data
+The current version of METI requres three input data.
+1. The gene expression matrix(n by k): expression_matrix.h5;
+2. Spatial coordinateds of samplespositions.txt;
+3. Histology image(optional): histology.tif, can be tif or png or jepg.
+
+The gene expreesion data can be stored as an AnnData object. AnnData stores a data matrix .X together with annotations of observations .obs, variables .var and unstructured annotations .uns. 
+
 
 
 
