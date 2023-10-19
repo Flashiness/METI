@@ -8,9 +8,45 @@ METI (Morphology-Enhanced Spatial Transcriptome Analysis Integrator) is an novel
 
 <br>
 
-![METI workflow](doc/METI_workflow.png)
+![METI workflow](doc/workflow.png)
 
 <br>
+
+## Usage
+
+With [**METI**](https://github.com/Flashiness/METI) package, you can:
+- Map normal and premalignant cells;
+- Identify cancer cell domain and heterogeneity;
+- Map and phenotype T cell;
+- Analyze other immune cells including B cells, plasma cells, neutrophils;
+- Analyze stromal cells.
+<br>
+For tutorial, please refer to: https://github.com/Flashiness/METI/tree/main/tutorial.md
+<br>
+Toy data and results can be downloaded at:
+
+## System Requirements
+Python support packages: torch, pandas, numpy, scipy, scanpy > 1.5, anndata, sklearn, cv2, TESLAforST.
+
+## Versions the software has been tested on
+- System: Anaconda
+- Python: 3.7.9
+- Python packages: pandas = 1.1.3, numpy = 1.20.2, python-igraph=0.8.3, torch=1.6.0,louvain=0.7.0, scipy = 1.5.2, scanpy = 1.6.0, anndata = 0.7.4,  sklearn = 0.23.3, cv2=4.5.1, TESLAforST=1.2.4.
+<br>
+
+## Contributing
+
+Souce code: [Github](https://github.com/Flashiness/METI)  
+
+We are continuing adding new features. Bug reports or feature requests are welcome. 
+
+## References
+
+Please consider citing the following reference:
+
+- https://doi.org/10.1101/2023.10.06.561287
+<br>
+
 
 
 
