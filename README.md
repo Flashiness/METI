@@ -23,7 +23,6 @@ With [**METI**](https://github.com/Flashiness/METI) package, you can:
 <br>
 For tutorial, please refer to: https://github.com/Flashiness/METI/tree/main/tutorial.md
 <br>
-Toy data and results can be downloaded at:
 
 ## System Requirements
 Python support packages: torch, pandas, numpy, scipy, scanpy > 1.5, anndata, sklearn, cv2, TESLAforST.
