@@ -8,7 +8,7 @@ METI (Morphology-Enhanced Spatial Transcriptome Analysis Integrator) is an novel
 
 <br>
 
-![METI workflow]()
+![METI workflow](doc/METI_workflow.png)
 
 <br>
 
