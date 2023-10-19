@@ -36,7 +36,7 @@ Python support packages: torch, pandas, numpy, scipy, scanpy > 1.5, anndata, skl
 
 ## Contributing
 
-Souce code: [Github](https://github.com/Flashiness/METI)  
+Source code: [Github](https://github.com/Flashiness/METI)  
 
 We are continuing adding new features. Bug reports or feature requests are welcome. 
 
