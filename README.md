@@ -18,7 +18,7 @@ With [**METI**](https://github.com/Flashiness/METI) package, you can:
 - Analyze other immune cells including B cells, plasma cells, neutrophils;
 - Analyze stromal cells.
 <br>
-For tutorial, please refer to: https://github.com/Flashiness/METI/tutorial.md
+For tutorial, please refer to: https://github.com/Flashiness/METI/blob/main/tutorial/tutorial.md
 <br>
 
 ## System Requirements
