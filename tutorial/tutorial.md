@@ -485,21 +485,46 @@ save_dir = '../tutorial/data/seg_results/'
 #=================================Kmeans Segmentation===================================
 meti.Segment_Patches(patches, save_dir, n_clusters=10)
 ```
-    Doing:  0 / 144
-    Doing:  1 / 144
-    Doing:  2 / 144
-    Doing:  3 / 144
-    Doing:  4 / 144
-    Doing:  5 / 144
-
-
+    Doing:  0 / 9
+    Doing:  1 / 9
+    Doing:  2 / 9
+    Doing:  3 / 9
+    Doing:  4 / 9
+    Doing:  5 / 9
+    Doing:  6 / 9
+    Doing:  7 / 9
+    Doing:  8 / 9
 
 ```python
 pred_file_locs=[save_dir+"/patch"+str(j)+"_pred.npy" for j in range(patch_info.shape[0])]
 dic_list=meti.get_color_dic(patches, seg_dir=save_dir)
-
 masks_index=meti.Match_Masks(dic_list, num_mask_each=5, mapping_threshold1=30, mapping_threshold2=60)
+```
+    Doing  0
+    Adding,  no match counts: 0 new rate: 1.0
+    Adding,  no match counts: 1 new rate: 1.0
+    Not adding,  no match counts: 4 new rate: 1.0
+    Doing  1
+    Not adding,  no match counts: 0 new rate: 0.6842105263157895
+    Adding,  no match counts: 0 new rate: 1.0
+    Not adding,  no match counts: 2 new rate: 0.6
+    Doing  2
+    Doing  3
+    Doing  4
+    Not adding,  no match counts: 0 new rate: 0.12903225806451613
+    Adding,  no match counts: 1 new rate: 0.9
+    Doing  5
+    Doing  6
+    Doing  7
+    Doing  8
+    
+```python
 masks=meti.Extract_Masks(masks_index, pred_file_locs, patch_size)
+```
+    Extracting mask  0
+    Extracting mask  1
+    Extracting mask  2
+    Extracting mask  3
 
 combined_masks=meti.Combine_Masks(masks, patch_info, img.shape[0], img.shape[1])
 plot_dir = '../tutorial/data/seg_results/mask'
