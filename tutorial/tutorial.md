@@ -526,6 +526,7 @@ masks=meti.Extract_Masks(masks_index, pred_file_locs, patch_size)
     Extracting mask  2
     Extracting mask  3
 
+```python
 combined_masks=meti.Combine_Masks(masks, patch_info, img.shape[0], img.shape[1])
 plot_dir = '../tutorial/data/seg_results/mask'
 
