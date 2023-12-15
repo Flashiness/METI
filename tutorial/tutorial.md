@@ -60,6 +60,7 @@ import PIL
 from PIL import Image as IMAGE
 import os
 import METI as meti
+import tifffile
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 ```
 
@@ -450,6 +451,84 @@ Image(filename=save_dir + 'IME.jpg')
 
 ### 8. Segmentation
 #### 8.1 Patch split
+```python
+img = tifffile.imread(r"../tutorial/data/1415785-6 Bx2.tif") 
+
+patch_size = 4000
+d0=int(np.ceil(img.shape[0]/patch_size)*patch_size)
+d1=int(np.ceil(img.shape[1]/patch_size)*patch_size)
+
+img_extended=np.concatenate((img, np.zeros((img.shape[0], d1-img.shape[1], 3), dtype=np.uint16)), axis=1)
+img_extended=np.concatenate((img_extended, np.zeros((d0-img.shape[0], d1, 3), dtype=np.uint16)), axis=0)
+
+#=====================================Split into patched=====================================================
+x=[i*patch_size for i in range(int(img_extended.shape[0]/patch_size))]
+x=np.repeat(x,int(img_extended.shape[1]/patch_size))
+y=[i*patch_size for i in range(int(img_extended.shape[1]/patch_size))]
+y=np.array(y*int(img_extended.shape[0]/patch_size))
+patches=np.zeros((len(x), patch_size, patch_size, 3), dtype=np.uint16) #n*patch_size*patch_size*3
+
+patch_info_list = [{'x': x, 'y': y} for x, y in zip(x, y)]
+patch_info = pd.DataFrame(patch_info_list)
+patch_info.to_csv('../tutorial/data/seg_results/patch_info.csv', index=False)
+
+counter=0
+for i in range(len(x)):
+	x_tmp=int(x[i])
+	y_tmp=int(y[i])
+	patches[counter, :, :, :]=img_extended[x_tmp:x_tmp+patch_size,y_tmp:y_tmp+patch_size, :]
+	counter+=1
+
+#patch_info = pd.read_csv('../tutorial/data/seg_results/patch_info.csv')
+save_dir = '../tutorial/data/seg_results/'
+
+#=================================Kmeans Segmentation===================================
+meti.Segment_Patches(patches, save_dir, n_clusters=10)
+```
+Doing:  0 / 144
+Doing:  1 / 144
+Doing:  2 / 144
+Doing:  3 / 144
+Doing:  4 / 144
+Doing:  5 / 144
+Doing:  6 / 144
+Doing:  7 / 144
+Doing:  8 / 144
+Doing:  9 / 144
+Doing:  10 / 144
+Doing:  11 / 144
+Doing:  12 / 144
+Doing:  13 / 144
+Doing:  14 / 144
+Doing:  15 / 144
+Doing:  16 / 144
+Doing:  17 / 144
+Doing:  18 / 144
+
+
+```python
+pred_file_locs=[save_dir+"/patch"+str(j)+"_pred.npy" for j in range(patch_info.shape[0])]
+dic_list=meti.get_color_dic(patches, seg_dir=save_dir)
+
+masks_index=meti.Match_Masks(dic_list, num_mask_each=5, mapping_threshold1=30, mapping_threshold2=60)
+masks=meti.Extract_Masks(masks_index, pred_file_locs, patch_size)
+
+combined_masks=meti.Combine_Masks(masks, patch_info, img.shape[0], img.shape[1])
+plot_dir = '../tutorial/data/seg_results/mask'
+
+for i in range(masks.shape[0]): #Each mask
+	print("Plotting mask ", str(i))
+	ret=(combined_masks[i]*255)
+	np.save(plot_dir + '/masks' + str(i) + '.npy', ret)
+	cv2.imwrite(plot_dir+'/mask'+str(i)+'.png', ret.astype(np.uint8))
+```
+
+
+
+
+
+
+
 
 
 
