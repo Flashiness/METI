@@ -97,7 +97,7 @@ plt.rcParams["figure.figsize"] = (8, 8)
 sc.pl.spatial(adata, img_key="hires", color=["total_counts", "n_genes_by_counts"], size = 1.5, save = 'UMI_count.png')
 ```
 
-**UMI counts**![](./sample_results/showUMI_count.png)
+**UMI counts**![](./sample_results/UMI_count_Scanpy_54078.png)
 
 
 ### 4. Read in data
@@ -448,7 +448,8 @@ Image(filename=save_dir + 'IME.jpg')
 **Goblet region annotation**![](./sample_results/Goblet.jpg)
 
 
-
+### 8. Segmentation
+#### 8.1 Patch split
 
 
 
