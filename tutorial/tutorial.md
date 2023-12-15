@@ -484,6 +484,13 @@ save_dir = '../tutorial/data/seg_results/'
 
 #=================================Kmeans Segmentation===================================
 meti.Segment_Patches(patches, save_dir, n_clusters=10)
+```
+    Doing:  0 / 144
+    Doing:  1 / 144
+    Doing:  2 / 144
+    Doing:  3 / 144
+    Doing:  4 / 144
+    Doing:  5 / 144
 
 
 
