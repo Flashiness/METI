@@ -563,6 +563,8 @@ cv2.imwrite(plot_dir+'/nuclei_filtered.png', tmp)
 
 **nuclei segmentation**![](./sample_results/nuclei_filtered1.png)
 
+Based on the segmentation results and features such as areas, width-length ratio, solidity, etc, you can filter out goblet according to their morphology.
+
 **goblet filter**![](./sample_results/nuclei_filtered2.png)
 
 
