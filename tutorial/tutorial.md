@@ -560,7 +560,9 @@ tmp=ret*(np.isin(ret, filtered_cc_index))
 tmp=plot_cc(tmp)
 cv2.imwrite(plot_dir+'/nuclei_filtered.png', tmp)
 ```
+
 **nuclei segmentation**![](./sample_results/nuclei_filtered1.png)
+
 **goblet filter**![](./sample_results/nuclei_filtered2.png)
 
 
