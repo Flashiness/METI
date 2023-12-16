@@ -450,7 +450,6 @@ Image(filename=save_dir + 'IME.jpg')
 
 
 ### 8. Segmentation
-#### 8.1 Patch split
 ```python
 img = tifffile.imread(r"../tutorial/data/1415785-6 Bx2.tif") 
 
@@ -528,6 +527,13 @@ masks=meti.Extract_Masks(masks_index, pred_file_locs, patch_size)
 
 ```python
 combined_masks=meti.Combine_Masks(masks, patch_info, img.shape[0], img.shape[1])
+```
+    Combining mask  0
+    Combining mask  1
+    Combining mask  2
+    Combining mask  3
+
+```python
 plot_dir = '../tutorial/data/seg_results/mask'
 
 for i in range(masks.shape[0]): #Each mask
@@ -536,7 +542,26 @@ for i in range(masks.shape[0]): #Each mask
 	np.save(plot_dir + '/masks' + str(i) + '.npy', ret)
 	cv2.imwrite(plot_dir+'/mask'+str(i)+'.png', ret.astype(np.uint8))
 ```
+    Plotting mask  0
+    Plotting mask  1
+    Plotting mask  2
+    Plotting mask  3
 
+```python
+#===========================find a correct mask meeting with your requirement, ex: nucleis channel
+mask_nuclei = np.load('../tutorial/data/seg_results/masks4_nuclei.npy')
+mask_nuclei = mask_nuclei.astype(np.uint8)
+ret, labels = cv2.connectedComponents(mask_nuclei)
+cc_features=Extract_CC_Features_each_CC(labels)
+
+filtered_cc_index=cc_features[(cc_features["cc_areas"]>40) &(cc_features["area_ratios"]>0.5) & (cc_features["hw_ratios"]<3)]["cc_index"].tolist()
+
+tmp=ret*(np.isin(ret, filtered_cc_index))
+tmp=plot_cc(tmp)
+cv2.imwrite(plot_dir+'/nuclei_filtered.png', tmp)
+```
+**nuclei segmentation**![](./sample_results/nuclei_filtered1.png)
+**goblet filter**![](./sample_results/nuclei_filtered2.png)
 
 
 
