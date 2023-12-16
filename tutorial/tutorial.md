@@ -579,4 +579,3 @@ Once you zoom the result in and compare with the original histology image, you c
 
 
 
-
