@@ -567,6 +567,9 @@ Based on the segmentation results and features such as areas, width-length ratio
 
 **goblet filter**![](./sample_results/nuclei_filtered2.png)
 
+Once you zoom the result in and compare with the original histology image, you can find out that goblet cells are perfectly extracted using METI.
+
+**goblet segmentation**![](./sample_results/Goblet_seg.png)
 
 
 
