@@ -304,7 +304,7 @@ sc.pl.scatter(adata, x='pixel_y', y='pixel_x', color='Goblet_GE', ax=ax, size = 
 # Save the figure
 plt.savefig('./sample_results/Goblet_spot_GE.png', dpi=300, bbox_inches='tight')
 ```
-**Goblet region annotation spot level**![](tutorial/sample_results/Goblet_spot_GE.png)
+**Goblet region annotation spot level**![](./data/seg_results/mask/Goblet_spot_GE.png)
 
 ### 8. Segmentation
 ```python
@@ -482,7 +482,7 @@ sc.pl.scatter(adata, x='pixel_y', y='pixel_x', color='Goblet_seg', ax=ax, size =
 # Save the figure
 plt.savefig(plot_dir+'Goblet_spot_seg.png', format='png', dpi=300, bbox_inches='tight')
 ```
-**goblet segmentation spot level**![](./sample_results/Goblet_spot_seg.png)
+**goblet segmentation spot level**![](./data/seg_results/mask/Goblet_spot_seg.png)
 
 ### 9. Integrarion of gene expression result with segmentation result
 ```python
@@ -495,7 +495,7 @@ sc.pl.scatter(adata, x='pixel_y', y='pixel_x', color='Goblet_combined', ax=ax, s
 # Save the figure
 plt.savefig(plot_dir+'Goblet_spot_combined.png', format='png', dpi=300, bbox_inches='tight')
 ```
-**goblet combined result spot level**![](./sample_results/Goblet_spot_combined.png)
+**goblet combined result spot level**![](./data/seg_results/mask/Goblet_spot_combined.png)
 
 
 
