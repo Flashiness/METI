@@ -566,10 +566,6 @@ for i in range(masks.shape[0]): #Each mask
 ```python
 #=================================Choose one mask to detect cells/nucleis=================================#
 channel=1
-```
-**channel 1 segmentation**![](../tutorial/data/seg_results/mask/mask1.png)
-
-```python
 converted_image = combined_masks[1].astype(np.uint8)
 ret, labels = cv2.connectedComponents(converted_image)
 features=meti.Extract_CC_Features_each_CC(labels)
@@ -597,7 +593,7 @@ if not os.path.exists(plot_dir):os.mkdir(plot_dir)
 
 labels=np.load(plot_dir+"labels.npy")
 
-#Filter
+#Filter - different cell type needs to apply different parameter values
 features=pd.read_csv(plot_dir+"features.csv", header=0, index_col=0)
 features['mm_ratio'] = features['major_axis_length']/features['minor_axis_length']
 features_sub=features[(features["area"]>120) &
@@ -621,16 +617,39 @@ cv2.imwrite(plot_dir+'/goblet_filtered.png', colored_mask)
 
 ```
 
-**nuclei segmentation**![](./sample_results/nuclei_filtered1.png)
+**nuclei segmentation**![](./tutorial/sample_results/goblet.png)
 
 Based on the segmentation results and features such as areas, width-length ratio, solidity, etc, you can filter out goblet according to their morphology.
 
-**goblet filter**![](./sample_results/nuclei_filtered2.png)
+**goblet segmentation**![](./tutorial/sample_results/nuclei_filtered_white.png)
 
-Once you zoom the result in and compare with the original histology image, you can find out that goblet cells are perfectly extracted using METI.
+```python
+#=====================================Convert to spot level============================================#
+plot_dir="./tutorial/sample_results/"
+img_seg = np.load(plot_dir+'nuclei_filtered_white.npy')
 
-**goblet segmentation**![](./sample_results/Goblet_seg.png)
+adata.obs["color"]=meti.extract_color(x_pixel=(np.array(adata.obs["pixel_x"])).astype(np.int64), 
+                    y_pixel=(np.array(adata.obs["pixel_y"])).astype(np.int64), image=img_seg, beta=49)
 
+type = []
+for each in adata.obs["color"]:
+    if each > 0:
+        r = "yes"
+        type.append(r)
+    else:
+        r = "no"
+        type.append(r)
+
+adata.obs['Goblet_seg'] = type
+
+fig, ax = plt.subplots(figsize=(10, 10))
+ax.imshow(img)
+ax.set_axis_off()
+sc.pl.scatter(adata, x='pixel_y', y='pixel_x', color='Goblet_seg', ax=ax, size = 150, title='Goblet Segmentation Spot Annotations')
+# Save the figure
+plt.savefig(plot_dir+'Goblet_spot_seg.png', format='png', dpi=300, bbox_inches='tight')
+```
+**goblet segmentation spot level**![](./tutorial/sample_results/Goblet_spot_seg.png)
 
 
 
