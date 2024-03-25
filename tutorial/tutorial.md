@@ -448,6 +448,30 @@ Image(filename=save_dir + 'IME.jpg')
 ```
 **Goblet region annotation**![](./sample_results/Goblet.jpg)
 
+```python
+#=====================================Convert to spot level============================================#
+adata.obs["color"]=extract_color(x_pixel=(np.array(adata.obs["pixel_x"])*resize_factor).astype(np.int64), 
+                                 y_pixel=(np.array(adata.obs["pixel_y"])*resize_factor).astype(np.int64), image=ret_img, beta=25)
+
+type = []
+for each in adata.obs["color"]:
+    if each < adata.obs["color"].quantile(0.2):
+        r = "yes"
+        type.append(r)
+    else:
+        r = "no"
+        type.append(r)
+
+adata.obs['Goblet_GE'] = type
+
+fig, ax = plt.subplots(figsize=(10, 10))  # Adjust the size as needed
+ax.imshow(img)
+ax.set_axis_off()
+sc.pl.scatter(adata, x='pixel_y', y='pixel_x', color='Goblet_GE', ax=ax, size = 150, title='Goblet GE Spot Annotations')
+# Save the figure
+plt.savefig('./sample_results/Goblet_spot_GE.png', dpi=300, bbox_inches='tight')
+```
+**Goblet region annotation spot level**![](./sample_results/Goblet_spot_GE.png)
 
 ### 8. Segmentation
 ```python
@@ -510,6 +534,8 @@ masks=meti.Extract_Masks(masks_index, pred_file_locs, patch_size)
     Extracting mask  1
     Extracting mask  2
     Extracting mask  3
+    Extracting mask  4
+    Extracting mask  5
 
 ```python
 combined_masks=meti.Combine_Masks(masks, patch_info, d0, d1)
@@ -518,6 +544,8 @@ combined_masks=meti.Combine_Masks(masks, patch_info, d0, d1)
     Combining mask  1
     Combining mask  2
     Combining mask  3
+    Combining mask  4
+    Combining mask  5
 
 ```python
 #=================================Plot masks=================================#
@@ -532,12 +560,14 @@ for i in range(masks.shape[0]): #Each mask
     Plotting mask  1
     Plotting mask  2
     Plotting mask  3
+    Plotting mask  4
+    Plotting mask  5
 
 ```python
 #=================================Choose one mask to detect cells/nucleis=================================#
 channel=1
 ```
-**channel 1 segmentation**![](../tutorial/data/seg_results/mask/mask0.png)
+**channel 1 segmentation**![](../tutorial/data/seg_results/mask/mask1.png)
 
 ```python
 converted_image = combined_masks[1].astype(np.uint8)
