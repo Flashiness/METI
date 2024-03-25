@@ -451,38 +451,23 @@ Image(filename=save_dir + 'IME.jpg')
 
 ### 8. Segmentation
 ```python
-img = tifffile.imread(r"../tutorial/data/1415785-6 Bx2.tif") 
+plot_dir="/rsrch4/home/genomic_med/jjiang6/Project1/S1_54078/Segmentation/NC_review_Goblet_seg/"
+save_dir=plot_dir+"/seg_results"
+adata= sc.read("/rsrch4/home/genomic_med/jjiang6/Project1/S1_54078/TESLA/54078_data.h5ad")
 
-patch_size = 4000
-d0=int(np.ceil(img.shape[0]/patch_size)*patch_size)
-d1=int(np.ceil(img.shape[1]/patch_size)*patch_size)
-
-img_extended=np.concatenate((img, np.zeros((img.shape[0], d1-img.shape[1], 3), dtype=np.uint16)), axis=1)
-img_extended=np.concatenate((img_extended, np.zeros((d0-img.shape[0], d1, 3), dtype=np.uint16)), axis=0)
+img_path = '/rsrch4/home/genomic_med/jjiang6/Project1/S1_54078/1415785-6 Bx2.tif'
+img = tiff.imread(img_path)
+d0, d1= img.shape[0], img.shape[1]
 
 #=====================================Split into patched=====================================================
-x=[i*patch_size for i in range(int(img_extended.shape[0]/patch_size))]
-x=np.repeat(x,int(img_extended.shape[1]/patch_size))
-y=[i*patch_size for i in range(int(img_extended.shape[1]/patch_size))]
-y=np.array(y*int(img_extended.shape[0]/patch_size))
-patches=np.zeros((len(x), patch_size, patch_size, 3), dtype=np.uint16) #n*patch_size*patch_size*3
+patch_size=400
+patches=patch_split_for_ST(img=img, patch_size=patch_size, spot_info=adata.obs, x_name="pixel_x", y_name="pixel_y")
+patch_info=adata.obs
 
-patch_info_list = [{'x': x, 'y': y} for x, y in zip(x, y)]
-patch_info = pd.DataFrame(patch_info_list)
-patch_info.to_csv('../tutorial/data/seg_results/patch_info.csv', index=False)
-
-counter=0
-for i in range(len(x)):
-	x_tmp=int(x[i])
-	y_tmp=int(y[i])
-	patches[counter, :, :, :]=img_extended[x_tmp:x_tmp+patch_size,y_tmp:y_tmp+patch_size, :]
-	counter+=1
-
-#patch_info = pd.read_csv('../tutorial/data/seg_results/patch_info.csv')
-save_dir = '../tutorial/data/seg_results/'
-
-#=================================Kmeans Segmentation===================================
-meti.Segment_Patches(patches, save_dir, n_clusters=10)
+# save results
+pickle.dump(patches, open(plot_dir + 'patches.pkl', 'wb'))
+#=================================Image Segmentation===================================
+meti.Segment_Patches(patches, save_dir=save_dir,n_clusters=10)
 ```
     Doing:  0 / 9
     Doing:  1 / 9
@@ -495,6 +480,7 @@ meti.Segment_Patches(patches, save_dir, n_clusters=10)
     Doing:  8 / 9
 
 ```python
+#=================================Get masks=================================#
 pred_file_locs=[save_dir+"/patch"+str(j)+"_pred.npy" for j in range(patch_info.shape[0])]
 dic_list=meti.get_color_dic(patches, seg_dir=save_dir)
 masks_index=meti.Match_Masks(dic_list, num_mask_each=5, mapping_threshold1=30, mapping_threshold2=60)
@@ -526,7 +512,7 @@ masks=meti.Extract_Masks(masks_index, pred_file_locs, patch_size)
     Extracting mask  3
 
 ```python
-combined_masks=meti.Combine_Masks(masks, patch_info, img.shape[0], img.shape[1])
+combined_masks=meti.Combine_Masks(masks, patch_info, d0, d1)
 ```
     Combining mask  0
     Combining mask  1
@@ -534,12 +520,12 @@ combined_masks=meti.Combine_Masks(masks, patch_info, img.shape[0], img.shape[1])
     Combining mask  3
 
 ```python
+#=================================Plot masks=================================#
 plot_dir = '../tutorial/data/seg_results/mask'
 
 for i in range(masks.shape[0]): #Each mask
 	print("Plotting mask ", str(i))
 	ret=(combined_masks[i]*255)
-	np.save(plot_dir + '/masks' + str(i) + '.npy', ret)
 	cv2.imwrite(plot_dir+'/mask'+str(i)+'.png', ret.astype(np.uint8))
 ```
     Plotting mask  0
@@ -548,17 +534,61 @@ for i in range(masks.shape[0]): #Each mask
     Plotting mask  3
 
 ```python
-#===========================find a correct mask meeting with your requirement, ex: nucleis channel
-mask_nuclei = np.load('../tutorial/data/seg_results/masks4_nuclei.npy')
-mask_nuclei = mask_nuclei.astype(np.uint8)
-ret, labels = cv2.connectedComponents(mask_nuclei)
-cc_features=Extract_CC_Features_each_CC(labels)
+#=================================Choose one mask to detect cells/nucleis=================================#
+channel=1
+```
+**channel 1 segmentation**![](../tutorial/data/seg_results/mask/mask0.png)
 
-filtered_cc_index=cc_features[(cc_features["cc_areas"]>40) &(cc_features["area_ratios"]>0.5) & (cc_features["hw_ratios"]<3)]["cc_index"].tolist()
+```python
+converted_image = combined_masks[1].astype(np.uint8)
+ret, labels = cv2.connectedComponents(converted_image)
+features=meti.Extract_CC_Features_each_CC(labels)
 
-tmp=ret*(np.isin(ret, filtered_cc_index))
-tmp=plot_cc(tmp)
-cv2.imwrite(plot_dir+'/nuclei_filtered.png', tmp)
+num_labels = labels.max()
+height, width = labels.shape
+
+colors = np.random.randint(0, 255, size=(num_labels + 1, 3), dtype=np.uint8)
+colors[0] = [0, 0, 0]
+colored_mask = np.zeros((height, width, 3), dtype=np.uint8)
+colored_mask = colors[labels]
+
+# save the colored nucleis channel
+cv2.imwrite('/rsrch4/home/genomic_med/jjiang6/Project1/S1_54078/Segmentation/NC_review_Goblet_seg/seg_results/goblet.png', colored_mask)
+# save nucleis label
+np.save('/rsrch4/home/genomic_med/jjiang6/Project1/S1_54078/Segmentation/NC_review_Goblet_seg/seg_results/labels.npy', labels)
+# save nucleis features, including, area, length, width
+features.to_csv('/rsrch4/home/genomic_med/jjiang6/Project1/S1_54078/Segmentation/NC_review_Goblet_seg/seg_results/features.csv', index=False)
+```
+
+```python
+#=================================filter out goblet cells=================================#
+plot_dir="../tutorial/data/seg_results/mask"
+if not os.path.exists(plot_dir):os.mkdir(plot_dir)
+
+labels=np.load(plot_dir+"labels.npy")
+
+#Filter
+features=pd.read_csv(plot_dir+"features.csv", header=0, index_col=0)
+features['mm_ratio'] = features['major_axis_length']/features['minor_axis_length']
+features_sub=features[(features["area"]>120) &
+					  (features["area"]<1500) &
+					  (features["solidity"]>0.85) &
+					  (features["mm_ratio"]<2)]
+index=features_sub.index.tolist()
+labels_filtered=labels*np.isin(labels, index)
+
+np.save(plot_dir+"nuclei_filtered.npy", labels_filtered)
+
+num_labels = labels_filtered.max()
+height, width = labels_filtered.shape
+
+colors = np.random.randint(0, 255, size=(num_labels + 1, 3), dtype=np.uint8)
+colors[0] = [0, 0, 0]
+colored_mask = np.zeros((height, width, 3), dtype=np.uint8)
+colored_mask = colors[labels_filtered]
+
+cv2.imwrite(plot_dir+'/goblet_filtered.png', colored_mask)
+
 ```
 
 **nuclei segmentation**![](./sample_results/nuclei_filtered1.png)
