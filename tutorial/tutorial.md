@@ -617,11 +617,11 @@ cv2.imwrite(plot_dir+'/goblet_filtered.png', colored_mask)
 
 ```
 
-**nuclei segmentation**![](./tutorial/sample_results/goblet.png)
+**nuclei segmentation**![](./sample_results/goblet.png)
 
 Based on the segmentation results and features such as areas, width-length ratio, solidity, etc, you can filter out goblet according to their morphology.
 
-**goblet segmentation**![](./tutorial/sample_results/nuclei_filtered_white.png)
+**goblet segmentation**![](./sample_results/nuclei_filtered_white.png)
 
 ```python
 #=====================================Convert to spot level============================================#
@@ -649,7 +649,7 @@ sc.pl.scatter(adata, x='pixel_y', y='pixel_x', color='Goblet_seg', ax=ax, size =
 # Save the figure
 plt.savefig(plot_dir+'Goblet_spot_seg.png', format='png', dpi=300, bbox_inches='tight')
 ```
-**goblet segmentation spot level**![](./tutorial/sample_results/Goblet_spot_seg.png)
+**goblet segmentation spot level**![](./sample_results/Goblet_spot_seg.png)
 
 
 
