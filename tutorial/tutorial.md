@@ -651,7 +651,18 @@ plt.savefig(plot_dir+'Goblet_spot_seg.png', format='png', dpi=300, bbox_inches='
 ```
 **goblet segmentation spot level**![](./sample_results/Goblet_spot_seg.png)
 
+### 9. Integrarion of gene expression result with segmentation result
+```python
+adata.obs['Goblet_combined'] = np.where((adata.obs['Goblet_seg'] == 'yes') | (adata.obs['Goblet_GE'] == 'yes'), 'yes', 'no')
 
+fig, ax = plt.subplots(figsize=(10, 10))
+ax.imshow(img)
+ax.set_axis_off()
+sc.pl.scatter(adata, x='pixel_y', y='pixel_x', color='Goblet_combined', ax=ax, size = 150,title='Goblet Combined Spot Annotations')
+# Save the figure
+plt.savefig(plot_dir+'Goblet_spot_combined.png', format='png', dpi=300, bbox_inches='tight')
+```
+**goblet combined result spot level**![](./sample_results/Goblet_spot_combined.png)
 
 
 
