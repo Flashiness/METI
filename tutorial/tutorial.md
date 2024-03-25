@@ -6,6 +6,11 @@
 2. [Import modules]
 3. [Quality control]
 4. [Read in data]
+5. [Gene expression enhancement]
+6. [Goblet marker gene expression]
+7. [Region annotation]
+8. [Segmentation]
+9. [Integrarion of gene expression result with segmentation result]
 
 ### 1. Installation
 The installation should take a few minutes on a normal computer. 
@@ -184,93 +189,7 @@ enhanced_exp_adata.write_h5ad("../tutorial/data/enhanced_exp.h5ad")
     Calculating spot 3000
     Calculating spot 4000
     Calculating spot 5000
-    Calculating spot 6000
-    Calculating spot 7000
-    Calculating spot 8000
-    Calculating spot 9000
-    Calculating spot 10000
-    Calculating spot 11000
-    Calculating spot 12000
-    Calculating spot 13000
-    Calculating spot 14000
-    Calculating spot 15000
-    Calculating spot 16000
-    Calculating spot 17000
-    Calculating spot 18000
-    Calculating spot 19000
-    Calculating spot 20000
-    Calculating spot 21000
-    Calculating spot 22000
-    Calculating spot 23000
-    Calculating spot 24000
-    Calculating spot 25000
-    Calculating spot 26000
-    Calculating spot 27000
-    Calculating spot 28000
-    Calculating spot 29000
-    Calculating spot 30000
-    Calculating spot 31000
-    Calculating spot 32000
-    Calculating spot 33000
-    Calculating spot 34000
-    Calculating spot 35000
-    Calculating spot 36000
-    Calculating spot 37000
-    Calculating spot 38000
-    Calculating spot 39000
-    Calculating spot 40000
-    Calculating spot 41000
-    Calculating spot 42000
-    Calculating spot 43000
-    Calculating spot 44000
-    Calculating spot 45000
-    Calculating spot 46000
-    Calculating spot 47000
-    Calculating spot 48000
-    Calculating spot 49000
-    Calculating spot 50000
-    Calculating spot 51000
-    Calculating spot 52000
-    Calculating spot 53000
-    Calculating spot 54000
-    Calculating spot 55000
-    Calculating spot 56000
-    Calculating spot 57000
-    Calculating spot 58000
-    Calculating spot 59000
-    Calculating spot 60000
-    Calculating spot 61000
-    Calculating spot 62000
-    Calculating spot 63000
-    Calculating spot 64000
-    Calculating spot 65000
-    Calculating spot 66000
-    Calculating spot 67000
-    Calculating spot 68000
-    Calculating spot 69000
-    Calculating spot 70000
-    Calculating spot 71000
-    Calculating spot 72000
-    Calculating spot 73000
-    Calculating spot 74000
-    Calculating spot 75000
-    Calculating spot 76000
-    Calculating spot 77000
-    Calculating spot 78000
-    Calculating spot 79000
-    Calculating spot 80000
-    Calculating spot 81000
-    Calculating spot 82000
-    Calculating spot 83000
-    Calculating spot 84000
-    Calculating spot 85000
-    Calculating spot 86000
-    Calculating spot 87000
-    Calculating spot 88000
-    Calculating spot 89000
-    Calculating spot 90000
-    Calculating spot 91000
-    Calculating spot 92000
+    ...
     --- 280.4760136604309 seconds ---
     Imputing spot 0
     Imputing spot 1000
@@ -278,93 +197,7 @@ enhanced_exp_adata.write_h5ad("../tutorial/data/enhanced_exp.h5ad")
     Imputing spot 3000
     Imputing spot 4000
     Imputing spot 5000
-    Imputing spot 6000
-    Imputing spot 7000
-    Imputing spot 8000
-    Imputing spot 9000
-    Imputing spot 10000
-    Imputing spot 11000
-    Imputing spot 12000
-    Imputing spot 13000
-    Imputing spot 14000
-    Imputing spot 15000
-    Imputing spot 16000
-    Imputing spot 17000
-    Imputing spot 18000
-    Imputing spot 19000
-    Imputing spot 20000
-    Imputing spot 21000
-    Imputing spot 22000
-    Imputing spot 23000
-    Imputing spot 24000
-    Imputing spot 25000
-    Imputing spot 26000
-    Imputing spot 27000
-    Imputing spot 28000
-    Imputing spot 29000
-    Imputing spot 30000
-    Imputing spot 31000
-    Imputing spot 32000
-    Imputing spot 33000
-    Imputing spot 34000
-    Imputing spot 35000
-    Imputing spot 36000
-    Imputing spot 37000
-    Imputing spot 38000
-    Imputing spot 39000
-    Imputing spot 40000
-    Imputing spot 41000
-    Imputing spot 42000
-    Imputing spot 43000
-    Imputing spot 44000
-    Imputing spot 45000
-    Imputing spot 46000
-    Imputing spot 47000
-    Imputing spot 48000
-    Imputing spot 49000
-    Imputing spot 50000
-    Imputing spot 51000
-    Imputing spot 52000
-    Imputing spot 53000
-    Imputing spot 54000
-    Imputing spot 55000
-    Imputing spot 56000
-    Imputing spot 57000
-    Imputing spot 58000
-    Imputing spot 59000
-    Imputing spot 60000
-    Imputing spot 61000
-    Imputing spot 62000
-    Imputing spot 63000
-    Imputing spot 64000
-    Imputing spot 65000
-    Imputing spot 66000
-    Imputing spot 67000
-    Imputing spot 68000
-    Imputing spot 69000
-    Imputing spot 70000
-    Imputing spot 71000
-    Imputing spot 72000
-    Imputing spot 73000
-    Imputing spot 74000
-    Imputing spot 75000
-    Imputing spot 76000
-    Imputing spot 77000
-    Imputing spot 78000
-    Imputing spot 79000
-    Imputing spot 80000
-    Imputing spot 81000
-    Imputing spot 82000
-    Imputing spot 83000
-    Imputing spot 84000
-    Imputing spot 85000
-    Imputing spot 86000
-    Imputing spot 87000
-    Imputing spot 88000
-    Imputing spot 89000
-    Imputing spot 90000
-    Imputing spot 91000
-    Imputing spot 92000
+    ...
 
 ### 6. Goblet marker gene expression
 ```python
