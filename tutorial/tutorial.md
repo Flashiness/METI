@@ -304,7 +304,7 @@ sc.pl.scatter(adata, x='pixel_y', y='pixel_x', color='Goblet_GE', ax=ax, size = 
 # Save the figure
 plt.savefig('./sample_results/Goblet_spot_GE.png', dpi=300, bbox_inches='tight')
 ```
-**Goblet region annotation spot level**![](./sample_results/Goblet_spot_GE.png)
+**Goblet region annotation spot level**![](tutorial/sample_results/Goblet_spot_GE.png)
 
 ### 8. Segmentation
 ```python
