@@ -530,4 +530,4 @@ plt.contour(x_pixel, y_pixel, Z)
 plt.colorbar()
 plt.show()
 ```
-**2D density plot**![](./sample_results/2D density plot.jpg)
+**2D density plot**![](./tutorial/sample_results/2D density plot.jpg)
