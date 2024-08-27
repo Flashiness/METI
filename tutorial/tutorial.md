@@ -531,3 +531,36 @@ plt.colorbar()
 plt.show()
 ```
 **2D density plot**![](./sample_results/2D_density_plot.jpg)
+
+```python
+coolwarm_colors = [(0, "#ffffff"), (0.25, "#3c4dc7"), (0.5, "#f5f5f5"), (0.75, "#ff8c00"), (1, "#c72222")]
+coolwarm_cmap = LinearSegmentedColormap.from_list('coolwarm', coolwarm_colors)
+
+def plotter(E, A):
+    fig = plt.figure(figsize = [12,8])
+    ax = fig.add_subplot(111, projection='3d')
+    
+    smoothed_Z = gaussian_filter(Z, sigma=2)
+    
+    im = ax.plot_surface(x_pixel, y_pixel, smoothed_Z, cmap = coolwarm_cmap, alpha=0.85)
+    ax.contourf(x_pixel, y_pixel, smoothed_Z, zdir = 'z', offset = -1500, cmap = coolwarm_cmap)
+    ax.view_init(elev = E, azim = A)
+    
+    fig.colorbar(im, shrink = 0.5)
+    ax.grid(False)
+    ax.set_zlim([-1500,1000])
+    
+    fig.set_facecolor('white')
+    ax.set_facecolor('white') 
+#   ax.grid(False)
+    ax.set_zticks([])
+    ax.set_zlabel(' ', color='white')
+    
+    plt.savefig('/Users/jiangjiahui/Desktop/P1-54078/Density_54078_3D_surface_map.png')
+    plt.show()
+
+plotter(35, -40)
+```
+**3D density plot**![](./sample_results/3D_density_plot.jpg)
+
+
