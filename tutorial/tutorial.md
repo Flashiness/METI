@@ -11,6 +11,7 @@
 7. [Region annotation]
 8. [Segmentation]
 9. [Integrarion of gene expression result with segmentation result]
+10. [3D density plot]
 
 ### 1. Installation
 The installation should take a few minutes on a normal computer. 
@@ -486,8 +487,47 @@ plt.savefig(plot_dir+'Goblet_spot_combined.png', format='png', dpi=300, bbox_inc
 ```
 **goblet combined result spot level**![](./data/seg_results/mask/Goblet_spot_combined.png)
 
+### 10. 3D density plot
+```python
+PIL.Image.MAX_IMAGE_PIXELS = None
+img = IMAGE.open(r"../tutorial/data/histology.tif") 
+img = np.array(img)
+
+#-----------------------------------Density of nuclei------------------------------------------#
+patch_size = 2000
+d0=int(np.ceil(img.shape[0]/patch_size)*patch_size)
+d1=int(np.ceil(img.shape[1]/patch_size)*patch_size)
+ret=np.load(plot_dir+'nuclei_filtered_white.npy')
+# ret_sub = ret[2000:7000, 2000:7000]
+x_pixel=[]
+y_pixel=[]
+step=30
+num_cells=[]
+for x in range(1800, 7000, step):
+	for y in range(2500, 7000, step):
+		tmp=ret[x:x+step, y:y+step]
+		x_pixel.append(x)
+		y_pixel.append(y)
+		num_cells.append(np.sum(tmp))
 
 
+tmp=pd.DataFrame({"x_pixel":x_pixel, "y_pixel":y_pixel, "num_cells":num_cells})
+adata=sc.AnnData(tmp.values)
 
+adata.obs["x_pixel"]=tmp["x_pixel"].tolist()
+adata.obs["y_pixel"]=tmp["y_pixel"].tolist()
+adata.obs["num_cells"]=tmp["num_cells"].tolist()
+adata.obs["num_cells"]=adata.obs["num_cells"].astype("float")
 
+rows = len(np.unique(x_pixel))
+cols = len(np.unique(y_pixel))
 
+Z = np.array(num_cells).reshape(rows, cols)
+x_pixel = np.array(x_pixel).reshape(rows, cols) 
+y_pixel = np.array(y_pixel).reshape(rows, cols)
+
+plt.contour(x_pixel, y_pixel, Z)
+plt.colorbar()
+plt.show()
+```
+**2D density plot**![](./sample_results/2D density plot.jpg)
