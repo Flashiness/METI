@@ -673,43 +673,30 @@ print("Target_clusters: ", target_clusters, "\n")
 T_reg = pred_refined
 ```
 Target_clusters:  [5, 4, 16]
+
 **Treg marker expression plot**![](./sample_results/T_reg.jpg)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```python
 #-----------------------------------Treg aggregate------------------------------------------#
-T_CD3_CD4 = np.array([True if each in [12, 4, 20, 3] else False for each in T_CD3DE]) & np.array([True if each in [7, 9, 17, 10, 12, 13, 14, 5, 1] else False for each in T_CD4])
-T_CD3_CD4 = T_CD3_CD4.astype('int')
-Counter(T_CD3_CD4)
+T_CD3_CD4_reg = np.array([True if each in [12, 4, 20, 3] else False for each in T_CD3DE]) & \
+np.array([True if each in [7, 9, 17, 10, 12, 13, 14, 5, 1] else False for each in T_CD4]) & \
+np.array([True if each in [5, 4, 16] else False for each in T_reg])
+T_CD3_CD4_reg = T_CD3_CD4_reg.astype('int')
+Counter(T_CD3_CD4_reg)
+
 ret_img=tesla.visualize_annotation(img=img, 
                               binary=binary, 
                               resize_factor=resize_factor,
-                              pred_refined=T_CD3_CD4, 
+                              pred_refined=T_CD3_CD4_reg, 
                               target_clusters=[1], 
                               c_m=c_m)
 
-cv2.imwrite(save_dir + "CD3DE_CD4.jpg", ret_img)
-Image(filename=save_dir + "CD3DE_CD4.jpg")
+cv2.imwrite(save_dir + "CD3DE_CD4_Treg.jpg", ret_img)
+Image(filename=save_dir + "CD3DE_CD4_Treg.jpg")
 ```
-**CD4 T cell plot**![](./sample_results/CD3DE_CD4.jpg)
-
-
-
-
-
+**Treg plot**![](./sample_results/CD3DE_CD4_Treg.jpg)
+```
 
 
 
