@@ -12,6 +12,7 @@
 8. [Segmentation]
 9. [Integrarion of gene expression result with segmentation result]
 10. [3D density plot]
+11. [Cell type identification (T cells as an example)]
 
 ### 1. Installation
 The installation should take a few minutes on a normal computer. 
@@ -564,7 +565,7 @@ plotter(35, -40)
 
 
 
-### 11. cell type identification (T cells as an example)
+### 11. Cell type identification (T cells as an example)
 
 ```python
 #-----------------------------------T cell aggregate------------------------------------------#
