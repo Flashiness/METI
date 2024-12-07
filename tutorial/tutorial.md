@@ -564,3 +564,86 @@ plotter(35, -40)
 **3D density plot**![](./sample_results/3D_density_plot.jpg)
 
 
+
+### 11. cell type identification (T cells as an example)
+```python
+#================ 4.4 Plot meta gene expression image ===============#
+genes =  ["CD3D", "CD3E"]
+    
+sudo_adata = meta_gene_plot(img=img, 
+                                binary=binary,
+                                sudo_adata=enhanced_exp_adata, 
+                                genes=genes, 
+                                resize_factor=resize_factor,
+                                num_required=1, 
+                                target_size="small")
+
+cnt_color = clr.LinearSegmentedColormap.from_list('magma', ["#000003",  "#3b0f6f",  "#8c2980",   "#f66e5b", "#fd9f6c", "#fbfcbf"], N=256)
+fig=sc.pl.scatter(sudo_adata,alpha=1,x="y",y="x",color='meta',color_map=cnt_color,show=False,size=5)
+fig.set_aspect('equal', 'box')
+fig.invert_yaxis()
+plt.gcf().set_dpi(600)
+fig.figure.show()
+
+plt.savefig(save_dir + "T_cell_meta.png", dpi=600)
+plt.close()
+
+```
+**T cell expression plot**![](./sample_results/CD3D_CD3E.jpg)
+
+
+```python
+# save result
+T_CD3DE = pred_refined
+np.save(save_dir + "CD3D_CD3E.npy", pred_refined)
+print("Target_clusters: ", target_clusters, "\n")
+np.save(save_dir + "T_CD3DE.npy", target_clusters)
+#Save the cluster density information
+c_d={i[0]:i[1] for i in c_m[0:len(target_clusters)]}
+print("Cluster_density : ", c_d)
+with open(save_dir + 'CD3D_CD3E_c_d.pkl', 'wb') as f: pickle.dump(c_d, f)
+
+# define a function to convert T aggregate to spot level
+def extract_color(x_pixel=None, y_pixel=None, image=None, beta=49):
+	beta_half=round(beta/2)
+	g=[]
+	for i in range(len(x_pixel)):
+		max_x=image.shape[0]
+		max_y=image.shape[1]
+		nbs=image[max(0,x_pixel[i]-beta_half):min(max_x,x_pixel[i]+beta_half+1),max(0,y_pixel[i]-beta_half):min(max_y,y_pixel[i]+beta_half+1)]
+		g.append(np.mean(nbs))
+	c3=np.array(g)
+	return c3
+
+adata.obs["color"]=extract_color(x_pixel=(np.array(adata.obs["pixel_x"])*resize_factor).astype(np.int), 
+                                 y_pixel=(np.array(adata.obs["pixel_y"])*resize_factor).astype(np.int), image=ret_img, beta=15)
+
+data = pd.DataFrame(adata.obs["color"])
+
+type = []
+for each in data["color"]:
+    if each < 175: # change the value based on color
+        r = "yes"
+        type.append(r)
+    else:
+        r = "no"
+        type.append(r)
+
+data["type"] = type
+data = pd.DataFrame(data["type"])
+data.to_csv(save_dir + "T_aggregate_cluster.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
