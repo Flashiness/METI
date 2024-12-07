@@ -570,7 +570,7 @@ plotter(35, -40)
 #-----------------------------------T cell aggregate------------------------------------------#
 genes= ["CD3D", "CD3E"]
 genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
-pred_refined, target_clusters, c_m=tesla.annotation(img=img, 
+pred_refined, target_clusters, c_m=meti.annotation(img=img, 
                                                     binary=binary,
                                                     sudo_adata=enhanced_exp_adata, 
                                                     genes=genes, 
@@ -600,7 +600,7 @@ Target_clusters:  [12, 4, 20, 3]
 #-----------------------------------CD4 expression------------------------------------------#
 genes= ["CD4"]
 genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
-pred_refined, target_clusters, c_m=tesla.annotation(img=img, 
+pred_refined, target_clusters, c_m=meti.annotation(img=img, 
                                                     binary=binary,
                                                     sudo_adata=enhanced_exp_adata, 
                                                     genes=genes, 
@@ -630,9 +630,81 @@ Target_clusters:  [7, 9, 17, 10, 12, 13, 14, 5, 1]
 ```python
 #-----------------------------------CD4 T cell aggregate------------------------------------------#
 T_CD3_CD4 = np.array([True if each in [12, 4, 20, 3] else False for each in T_CD3DE]) & np.array([True if each in [7, 9, 17, 10, 12, 13, 14, 5, 1] else False for each in T_CD4])
+T_CD3_CD4 = T_CD3_CD4.astype('int')
+Counter(T_CD3_CD4)
+ret_img=tesla.visualize_annotation(img=img, 
+                              binary=binary, 
+                              resize_factor=resize_factor,
+                              pred_refined=T_CD3_CD4, 
+                              target_clusters=[1], 
+                              c_m=c_m)
+
+cv2.imwrite(save_dir + "CD3DE_CD4.jpg", ret_img)
+Image(filename=save_dir + "CD3DE_CD4.jpg")
+```
+**CD4 T cell plot**![](./sample_results/CD3DE_CD4.jpg)
+
+
+```python
+#-----------------------------------Treg marker gene expression------------------------------------------#
+genes= ["FOXP3", "IL2RA"]
+genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
+#target_size can be set to "small" or "large".
+pred_refined, target_clusters, c_m=meti.annotation(img=img, 
+                                                    binary=binary,
+                                                    sudo_adata=enhanced_exp_adata, 
+                                                    genes=genes, 
+                                                    resize_factor=resize_factor,
+                                                    num_required=1, 
+                                                    target_size="small")
+
+#Plot
+ret_img=tesla.visualize_annotation(img=img, 
+                              binary=binary, 
+                              resize_factor=resize_factor,
+                              pred_refined=pred_refined, 
+                              target_clusters=target_clusters, 
+                              c_m=c_m)
+
+cv2.imwrite(save_dir + "T_reg.jpg", ret_img)
+Image(filename=save_dir + "T_reg.jpg")
+
+print("Target_clusters: ", target_clusters, "\n")
+T_reg = pred_refined
+```
+Target_clusters:  [5, 4, 16]
+**Treg marker expression plot**![](./sample_results/T_reg.jpg)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+#-----------------------------------Treg aggregate------------------------------------------#
+T_CD3_CD4 = np.array([True if each in [12, 4, 20, 3] else False for each in T_CD3DE]) & np.array([True if each in [7, 9, 17, 10, 12, 13, 14, 5, 1] else False for each in T_CD4])
+T_CD3_CD4 = T_CD3_CD4.astype('int')
+Counter(T_CD3_CD4)
+ret_img=tesla.visualize_annotation(img=img, 
+                              binary=binary, 
+                              resize_factor=resize_factor,
+                              pred_refined=T_CD3_CD4, 
+                              target_clusters=[1], 
+                              c_m=c_m)
+
+cv2.imwrite(save_dir + "CD3DE_CD4.jpg", ret_img)
+Image(filename=save_dir + "CD3DE_CD4.jpg")
+```
+**CD4 T cell plot**![](./sample_results/CD3DE_CD4.jpg)
 
 
 
