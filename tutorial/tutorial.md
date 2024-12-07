@@ -531,7 +531,6 @@ plt.colorbar()
 plt.show()
 ```
 **2D density plot**![](./sample_results/2D_density_plot.jpg)
-
 ```python
 coolwarm_colors = [(0, "#ffffff"), (0.25, "#3c4dc7"), (0.5, "#f5f5f5"), (0.75, "#ff8c00"), (1, "#c72222")]
 coolwarm_cmap = LinearSegmentedColormap.from_list('coolwarm', coolwarm_colors)
@@ -566,73 +565,71 @@ plotter(35, -40)
 
 
 ### 11. cell type identification (T cells as an example)
+
 ```python
-#================ 4.4 Plot meta gene expression image ===============#
-genes =  ["CD3D", "CD3E"]
-    
-sudo_adata = meta_gene_plot(img=img, 
-                                binary=binary,
-                                sudo_adata=enhanced_exp_adata, 
-                                genes=genes, 
-                                resize_factor=resize_factor,
-                                num_required=1, 
-                                target_size="small")
+#-----------------------------------T cell aggregate------------------------------------------#
+genes= ["CD3D", "CD3E"]
+genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
+pred_refined, target_clusters, c_m=tesla.annotation(img=img, 
+                                                    binary=binary,
+                                                    sudo_adata=enhanced_exp_adata, 
+                                                    genes=genes, 
+                                                    resize_factor=resize_factor,
+                                                    num_required=1, 
+                                                    target_size="small")
 
-cnt_color = clr.LinearSegmentedColormap.from_list('magma', ["#000003",  "#3b0f6f",  "#8c2980",   "#f66e5b", "#fd9f6c", "#fbfcbf"], N=256)
-fig=sc.pl.scatter(sudo_adata,alpha=1,x="y",y="x",color='meta',color_map=cnt_color,show=False,size=5)
-fig.set_aspect('equal', 'box')
-fig.invert_yaxis()
-plt.gcf().set_dpi(600)
-fig.figure.show()
+#Plot
+ret_img=tesla.visualize_annotation(img=img, 
+                              binary=binary, 
+                              resize_factor=resize_factor,
+                              pred_refined=pred_refined, 
+                              target_clusters=target_clusters, 
+                              c_m=c_m)
 
-plt.savefig(save_dir + "T_cell_meta.png", dpi=600)
-plt.close()
+cv2.imwrite(save_dir + "CD3D_CD3E.jpg", ret_img)
+Image(filename=save_dir + "CD3D_CD3E.jpg")
 
+print("Target_clusters: ", target_clusters, "\n")
+T_CD3DE = pred_refined
 ```
+Target_clusters:  [12, 4, 20, 3] 
 **T cell expression plot**![](./sample_results/CD3D_CD3E.jpg)
 
+```python
+#-----------------------------------CD4 expression------------------------------------------#
+genes= ["CD4"]
+genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
+pred_refined, target_clusters, c_m=tesla.annotation(img=img, 
+                                                    binary=binary,
+                                                    sudo_adata=enhanced_exp_adata, 
+                                                    genes=genes, 
+                                                    resize_factor=resize_factor,
+                                                    num_required=1, 
+                                                    target_size="small")
+
+#Plot
+ret_img=tesla.visualize_annotation(img=img, 
+                              binary=binary, 
+                              resize_factor=resize_factor,
+                              pred_refined=pred_refined, 
+                              target_clusters=target_clusters, 
+                              c_m=c_m)
+
+cv2.imwrite(save_dir + "CD4.jpg", ret_img)
+Image(filename=save_dir + "CD4.jpg")
+T_CD4 = pred_refined
+
+**CD4 expression plot**![](./sample_results/CD4.jpg)
+```
 
 ```python
-# save result
-T_CD3DE = pred_refined
-np.save(save_dir + "CD3D_CD3E.npy", pred_refined)
-print("Target_clusters: ", target_clusters, "\n")
-np.save(save_dir + "T_CD3DE.npy", target_clusters)
-#Save the cluster density information
-c_d={i[0]:i[1] for i in c_m[0:len(target_clusters)]}
-print("Cluster_density : ", c_d)
-with open(save_dir + 'CD3D_CD3E_c_d.pkl', 'wb') as f: pickle.dump(c_d, f)
+#-----------------------------------CD4 T cell aggregate------------------------------------------#
+T_CD3_CD4 = np.array([True if each in [12, 4, 20, 3] else False for each in T_CD3DE]) & np.array([True if each in [7, 9, 17, 10, 12, 13, 14, 5, 1] else False for each in T_CD4])
 
-# define a function to convert T aggregate to spot level
-def extract_color(x_pixel=None, y_pixel=None, image=None, beta=49):
-	beta_half=round(beta/2)
-	g=[]
-	for i in range(len(x_pixel)):
-		max_x=image.shape[0]
-		max_y=image.shape[1]
-		nbs=image[max(0,x_pixel[i]-beta_half):min(max_x,x_pixel[i]+beta_half+1),max(0,y_pixel[i]-beta_half):min(max_y,y_pixel[i]+beta_half+1)]
-		g.append(np.mean(nbs))
-	c3=np.array(g)
-	return c3
 
-adata.obs["color"]=extract_color(x_pixel=(np.array(adata.obs["pixel_x"])*resize_factor).astype(np.int), 
-                                 y_pixel=(np.array(adata.obs["pixel_y"])*resize_factor).astype(np.int), image=ret_img, beta=15)
 
-data = pd.DataFrame(adata.obs["color"])
 
-type = []
-for each in data["color"]:
-    if each < 175: # change the value based on color
-        r = "yes"
-        type.append(r)
-    else:
-        r = "no"
-        type.append(r)
 
-data["type"] = type
-data = pd.DataFrame(data["type"])
-data.to_csv(save_dir + "T_aggregate_cluster.csv")
-```
 
 
 
