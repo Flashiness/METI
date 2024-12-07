@@ -593,6 +593,7 @@ print("Target_clusters: ", target_clusters, "\n")
 T_CD3DE = pred_refined
 ```
 Target_clusters:  [12, 4, 20, 3] 
+
 **T cell expression plot**![](./sample_results/CD3D_CD3E.jpg)
 
 ```python
@@ -617,10 +618,14 @@ ret_img=tesla.visualize_annotation(img=img,
 
 cv2.imwrite(save_dir + "CD4.jpg", ret_img)
 Image(filename=save_dir + "CD4.jpg")
+
+print("Target_clusters: ", target_clusters, "\n")
 T_CD4 = pred_refined
+```
+Target_clusters:  [7, 9, 17, 10, 12, 13, 14, 5, 1] 
 
 **CD4 expression plot**![](./sample_results/CD4.jpg)
-```
+
 
 ```python
 #-----------------------------------CD4 T cell aggregate------------------------------------------#
