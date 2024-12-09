@@ -13,6 +13,7 @@
 9. [Integrarion of gene expression result with segmentation result]
 10. [3D density plot]
 11. [Cell type identification (T cells as an example)]
+12. [Different cell type overlay (CAF subtype as an example)]
 
 ### 1. Installation
 The installation should take a few minutes on a normal computer. 
@@ -698,3 +699,161 @@ Image(filename=save_dir + "CD3DE_CD4_Treg.jpg")
 ```
 **Treg plot**![](./sample_results/CD3DE_CD4_Treg.jpg)
 ```
+
+
+### 12. Different cell type overlay (CAF subtype as an example)
+```python
+#=============================CAF===========================#
+genes= ["COL1A1", "COL1A2", "COL6A1", "COL6A2"]
+genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
+#target_size can be set to "small" or "large".
+pred_refined, target_clusters, c_m=meti.annotation(img=img, 
+                                                    binary=binary,
+                                                    sudo_adata=enhanced_exp_adata, 
+                                                    genes=genes, 
+                                                    resize_factor=resize_factor,
+                                                    num_required=1, 
+                                                    target_size="small")
+
+ret_img=tesla.visualize_annotation(img=img, 
+                              binary=binary, 
+                              resize_factor=resize_factor,
+                              pred_refined=pred_refined, 
+                              target_clusters=target_clusters, 
+                              c_m=c_m)
+
+cv2.imwrite(save_dir + "CAF.jpg", ret_img)
+Image(filename=save_dir + "CAF.jpg")
+
+print("Target_clusters: ", target_clusters, "\n")
+T_CAF = pred_refined
+```
+Target_clusters:  [5, 6, 7, 19] 
+
+**CAF plot**![](./sample_results/CAF.jpg)
+
+```python
+#=============================mCAF===========================#
+genes= ["TGFB1", "ACTA2"]
+genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
+#target_size can be set to "small" or "large".
+pred_refined, target_clusters, c_m=annotation(img=img, 
+                                                    binary=binary,
+                                                    sudo_adata=enhanced_exp_adata, 
+                                                    genes=genes, 
+                                                    resize_factor=resize_factor,
+                                                    num_required=1, 
+                                                    target_size="small")
+
+T_mCAF = pred_refined
+print("Target_clusters: ", target_clusters, "\n")
+# Target_clusters:  [18, 3, 8] 
+
+#find the overlay of CAF and mCAF
+T_CAF_mCAF = np.array([True if each in [5, 6, 7, 19] else False for each in T_CAF]) & \
+np.array([True if each in [18, 3, 8] else False for each in T_mCAF])
+T_CAF_mCAF = T_CAF_mCAF.astype('int')
+Counter(T_CAF_mCAF)
+
+#=============================iCAF===========================#
+genes= ["CXCL12", "CXCL13", "CXCL14"]
+genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
+#target_size can be set to "small" or "large".
+pred_refined, target_clusters, c_m=annotation(img=img, 
+                                                    binary=binary,
+                                                    sudo_adata=enhanced_exp_adata, 
+                                                    genes=genes, 
+                                                    resize_factor=resize_factor,
+                                                    num_required=1, 
+                                                    target_size="small")
+
+T_iCAF = pred_refined
+print("Target_clusters: ", target_clusters, "\n")
+# Target_clusters:  [11] 
+
+#find the overlay of CAF and iCAF
+T_CAF_iCAF = np.array([True if each in [5, 6, 7, 19]  else False for each in T_CAF]) & \
+np.array([True if each in [11]  else False for each in T_iCAF])
+T_CAF_iCAF = T_CAF_iCAF.astype('int')
+Counter(T_CAF_mCAF)
+
+#=============================apCAF===========================#
+genes= ["HLA-DQA1", "HLA-DPB1"]
+genes=list(set([i for i in genes if i in enhanced_exp_adata.var.index ]))
+#target_size can be set to "small" or "large".
+pred_refined, target_clusters, c_m=annotation(img=img, 
+                                                    binary=binary,
+                                                    sudo_adata=enhanced_exp_adata, 
+                                                    genes=genes, 
+                                                    resize_factor=resize_factor,
+                                                    num_required=1, 
+                                                    target_size="small")
+
+T_apCAF = pred_refined
+print("Target_clusters: ", target_clusters, "\n")
+# Target_clusters:  [2, 5, 8]
+
+#find the overlay of CAF and iCAF
+T_CAF_apCAF = np.array([True if each in [5, 6, 7, 19]  else False for each in T_CAF]) & \
+np.array([True if each in [2, 5, 8] else False for each in T_apCAF])
+T_CAF_apCAF = T_CAF_apCAF.astype('int')
+Counter(T_CAF_apCAF)
+
+#========================CAF subtypes overlay=====================#
+ret_img=tesla.visualize_annotation(img=img, 
+                              binary=binary, 
+                              resize_factor=resize_factor,
+                              pred_refined=pred_refined, 
+                              target_clusters=[0], 
+                              c_m=c_m)
+
+ret_img_new = ret_img.copy()
+resize_height = ret_img_new.shape[0]
+resize_width = ret_img_new.shape[1]
+alpha = 1
+
+# CAF - red
+target_clusters1=[5, 6, 7, 19]
+target_img = np.array([True if each in target_clusters1 else False for each in T_CAF])
+color = [43, 57, 192]
+target_img = target_img.astype(int).reshape(resize_height, resize_width)
+ret_img_new[target_img!=0]=np.array(color)
+
+
+# mCAF - blue 
+target_clusters2 = [1] 
+target_img = np.array([True if each in target_clusters2 else False for each in T_CAF_mCAF])
+color = [180, 130, 70]
+target_img = target_img.astype(int).reshape(resize_height, resize_width)
+ret_img_new[target_img!=0]=np.array(color)
+
+
+# iCAF - yellow
+target_clusters3 = [1] 
+target_img = np.array([True if each in target_clusters3 else False for each in T_CAF_iCAF])
+color = [15, 196, 241]
+target_img = target_img.astype(int).reshape(resize_height, resize_width)
+ret_img_new[target_img!=0]=np.array(color)
+
+    
+# apCAF - green
+target_clusters4 = [1] 
+target_img = np.array([True if each in target_clusters4 else False for each in T_CAF_apCAF])
+color = [113, 204, 46]
+target_img = target_img.astype(int).reshape(resize_height, resize_width)
+ret_img_new[target_img!=0]=np.array(color)
+
+cv2.imwrite(save_dir + 'CAF_subtypes.jpg', ret_img_new)
+Image(filename=save_dir + "CAF_subtypes.jpg")
+```
+**CAF subtypes overlay plot**![](./sample_results/CAF_subtypes.jpg)
+
+
+
+
+
+
+
+
+
+
