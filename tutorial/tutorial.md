@@ -700,8 +700,8 @@ Image(filename=save_dir + "CD3DE_CD4_Treg.jpg")
 **Treg plot**![](./sample_results/CD3DE_CD4_Treg.jpg)
 ```
 
-
 ### 12. Different cell type overlay (CAF subtype as an example)
+
 ```python
 #=============================CAF===========================#
 genes= ["COL1A1", "COL1A2", "COL6A1", "COL6A2"]
