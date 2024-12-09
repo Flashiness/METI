@@ -698,7 +698,6 @@ cv2.imwrite(save_dir + "CD3DE_CD4_Treg.jpg", ret_img)
 Image(filename=save_dir + "CD3DE_CD4_Treg.jpg")
 ```
 **Treg plot**![](./sample_results/CD3DE_CD4_Treg.jpg)
-```
 
 ### 12. Different cell type overlay (CAF subtype as an example)
 
