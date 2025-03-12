@@ -23,7 +23,8 @@ Now you can install the current release of METI by the following three ways:
 
 
 ```python
-pip install METIforST
+# pip install METIforST
+pip install --no-cache-dir --user METIforST
 #Note: you need to make sure that the pip is for python3，or you can install METI by
 python3 -m pip install METIforST==0.2
 ```
