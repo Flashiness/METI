@@ -514,7 +514,7 @@ plt.show()
 coolwarm_colors = [(0, "#ffffff"), (0.25, "#3c4dc7"), (0.5, "#f5f5f5"), (0.75, "#ff8c00"), (1, "#c72222")]
 coolwarm_cmap = LinearSegmentedColormap.from_list('coolwarm', coolwarm_colors)
 
-def plotter(E, A):
+def plotter(E = 30, A = 60, save_path=None):
     fig = plt.figure(figsize = [12,8])
     ax = fig.add_subplot(111, projection='3d')
     
@@ -523,21 +523,17 @@ def plotter(E, A):
     im = ax.plot_surface(x_pixel, y_pixel, smoothed_Z, cmap = coolwarm_cmap, alpha=0.85)
     ax.contourf(x_pixel, y_pixel, smoothed_Z, zdir = 'z', offset = -1500, cmap = coolwarm_cmap)
     ax.view_init(elev = E, azim = A)
-    
-    fig.colorbar(im, shrink = 0.5)
-    ax.grid(False)
-    ax.set_zlim([-1500,1000])
-    
-    fig.set_facecolor('white')
-    ax.set_facecolor('white') 
-#   ax.grid(False)
+    ax.set_zlim([-1500, 1000])
     ax.set_zticks([])
-    ax.set_zlabel(' ', color='white')
-    
-    plt.savefig('/Users/jiangjiahui/Desktop/P1-54078/Density_54078_3D_surface_map.png')
-    plt.show()
+    ax.set_zlabel('')
+    fig.colorbar(im, shrink=0.5)
+    ax.grid(False)
 
-plotter(35, -40)
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.show()
+    
+plotter(E=30, A=60, save_path=plot_dir + '3D_Density.png')
 ```
 **3D density plot**![](./sample_results/3D_density_plot.jpg)
 
