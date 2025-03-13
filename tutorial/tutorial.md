@@ -492,10 +492,6 @@ plt.savefig(plot_dir+'Goblet_spot_combined.png', format='png', dpi=300, bbox_inc
 
 ### 10. 3D density plot
 ```python
-PIL.Image.MAX_IMAGE_PIXELS = None
-img = IMAGE.open(r"../tutorial/data/histology.tif") 
-img = np.array(img)
-
 #-----------------------------------Density of nuclei------------------------------------------#
 ret=np.load(plot_dir+'nuclei_filtered_white.npy')
 # ret_sub = ret[2000:7000, 2000:7000]
